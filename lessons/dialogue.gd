@@ -18,39 +18,40 @@ var bodies := {
 var dialogue_items: Array[Dictionary] = [
 	{
 		"expression": expressions["regular"],
-		"text": "I've been learning about [wave]Arrays and Dictionaries[/wave]",
-		"character": bodies["sophia"]
+		"text": "I've been learning about [/wave]fish",
+		"character": bodies["sophia"],
+		"choice": {
+			"oh": 2,
+			"cool!": 1
+		}
 	},
 	{
 		"expression": expressions["regular"],
 		"text": "How has it been going?",
-		"character": bodies["pink"]
+		"character": bodies["pink"],
+		"choice": {
+			"bad": 2,
+			"good":1
+		}
 	},
 	{
 		"expression": expressions["sad"],
 		"text": "... Well... it is a little bit [shake]complicated[/shake]!",
-		"character": bodies["sophia"]
+		"character": bodies["sophia"],
+		"choice": {
+			"have you thought aboutlear": 2,
+			"maybe you should quit": 1
+		}
 	},
 	{
 		"expression": expressions["sad"],
-		"text": "Oh!",
-		"character": bodies["pink"]
+		"text": "fish are evil",
+		"character": bodies["pink"],
+		"choice": {
+			"idk..": 2,
+			"thank you": 1
+		}
 	},
-	{
-		"expression": expressions["regular"],
-		"text": "I believe in you!",
-		"character": bodies["pink"]
-	},
-	{
-		"expression": expressions["happy"],
-		"text": "If you stick to it, you'll eventually make it!",
-		"character": bodies["pink"]
-	},
-	{
-		"expression": expressions["happy"],
-		"text": "That's it! Let's [tornado freq=3.0][rainbow val=1.0]GOOOOOO!!![/rainbow][/tornado]",
-		"character": bodies["sophia"]
-	}
 ]
 var current_item_index := 0
 
@@ -69,8 +70,25 @@ var current_item_index := 0
 func _ready() -> void:
 	show_text(0)
 	
-
-
+func create_button(choices_data: Dictionary) -> void:
+	for button in action_buttons_v_box_container.get_children():
+		button.queue_free()
+		
+	for choice_text in choices_data:
+		var button := Button.new()
+		action_buttons_v_box_container.add_child(button)
+		
+		button.text = choice_text
+		
+		var target_line_idx: int = choices_data[choice_text]
+		
+		if target_line_idx == -1:
+			button.pressed.connect(get_tree().quit)
+		else: 
+			button.pressed.connect(show_text.bind(target_line_idx))
+			
+		
+			
 ## Draws the current text to the rich text element
 func show_text(current_item_index: int) -> void:
 	# We retrieve the current item from the array
@@ -81,7 +99,7 @@ func show_text(current_item_index: int) -> void:
 	rich_text_label.text = current_item["text"]
 	expression.texture = current_item["expression"]
 	body.texture = current_item["character"]
-
+	create_button(current_item["choice"])
 	# We set the initial visible ratio to the text to 0, so we can change it in the tween
 	rich_text_label.visible_ratio = 0.0
 	# We create a tween that will draw the text
@@ -107,8 +125,13 @@ func show_text(current_item_index: int) -> void:
 	slide_in()
 
 
-
-
+	for button: Button in action_buttons_v_box_container.get_children():
+		button.disabled = true
+	
+	tween.finished.connect(func() -> void:
+		for button: Button in action_buttons_v_box_container.get_children():
+			button.disabled = false
+)
 
 
 ## Animates the character when they start talking
