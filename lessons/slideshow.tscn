@@ -1,12 +1,30 @@
-[gd_scene load_steps=11 format=3 uid="uid://bqls3o5daeu2s"]
+[gd_scene load_steps=16 format=3 uid="uid://bqls3o5daeu2s"]
 
 [ext_resource type="Theme" uid="uid://cshg3sgf0xxq" path="res://assets/main_theme.tres" id="1_628t2"]
 [ext_resource type="Script" uid="uid://cheh7b73m0fds" path="res://lessons/slideshow.gd" id="2_wbt3f"]
+[ext_resource type="Script" uid="uid://ci0bnowe7sdmx" path="res://lessons/slideshow_entry.gd" id="3_nfiii"]
 [ext_resource type="Shader" uid="uid://dm7717xxg836f" path="res://assets/sliding_background.gdshader" id="3_qyyxv"]
 [ext_resource type="Texture2D" uid="uid://bnly1gkbxw6b5" path="res://assets/bubble_pattern.png" id="4_s7o0p"]
 [ext_resource type="Texture2D" uid="uid://copkt78vgp37i" path="res://assets/sophia.png" id="5_omd3l"]
+[ext_resource type="Texture2D" uid="uid://vb24hfgkeyti" path="res://assets/pink.png" id="6_ssdh4"]
 [ext_resource type="Texture2D" uid="uid://d000xjtr4iqtk" path="res://assets/emotion_regular.png" id="6_vfoky"]
 [ext_resource type="AudioStream" uid="uid://chgko4hmxwxu5" path="res://assets/talking_synth.ogg" id="7_nppuw"]
+
+[sub_resource type="Resource" id="Resource_l4cfd"]
+script = ExtResource("3_nfiii")
+text = "i changed......."
+metadata/_custom_type_script = "uid://ci0bnowe7sdmx"
+
+[sub_resource type="Resource" id="Resource_835jl"]
+script = ExtResource("3_nfiii")
+character = ExtResource("6_ssdh4")
+text = "whattttt"
+metadata/_custom_type_script = "uid://ci0bnowe7sdmx"
+
+[sub_resource type="Resource" id="Resource_lsmw1"]
+script = ExtResource("3_nfiii")
+text = "heh..."
+metadata/_custom_type_script = "uid://ci0bnowe7sdmx"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_efgpg"]
 shader = ExtResource("3_qyyxv")
@@ -30,6 +48,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_628t2")
 script = ExtResource("2_wbt3f")
+dialogue_items = Array[ExtResource("3_nfiii")]([SubResource("Resource_l4cfd"), SubResource("Resource_835jl"), SubResource("Resource_lsmw1")])
 
 [node name="Background" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_efgpg")
