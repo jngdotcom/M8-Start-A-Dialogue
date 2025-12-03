@@ -1,9 +1,5 @@
 extends Control
 
-## An array of dictionaries. Each dictionary has three properties:
-## - expression: a [code]Texture[/code] containing an expression
-## - text: a [code]String[/code] containing the text the character says
-## - character: a [code]Texture[/code] representing the character
 @export var dialogue_items: Array[SlideShowEntry] = []
 var current_item_index := 0
 
@@ -23,7 +19,6 @@ func _ready() -> void:
 	show_text()
 	next_button.pressed.connect(advance)
 
-
 ## Draws the current text to the rich text element
 func show_text() -> void:
 	# We retrieve the current item from the array
@@ -34,7 +29,6 @@ func show_text() -> void:
 	rich_text_label.text = current_item.text
 	expression.texture = current_item.expression
 	body.texture = current_item.character
-
 	# We set the initial visible ratio to the text to 0, so we can change it in the tween
 	rich_text_label.visible_ratio = 0.0
 	# We create a tween that will draw the text
@@ -42,7 +36,7 @@ func show_text() -> void:
 	# A variable that holds the amount of time for the text to show, in seconds
 	# We could write this directly in the tween call, but this is clearer.
 	# We will also use this for deciding on the sound length
-	var text_appearing_duration: float = current_item["text"].length() / 30.0
+	var text_appearing_duration := (current_item["text"] as String).length() / 30.0
 	# We show the text slowly
 	tween.tween_property(rich_text_label, "visible_ratio", 1.0, text_appearing_duration)
 	# We randomize the audio playback's start time to make it sound different
@@ -55,15 +49,7 @@ func show_text() -> void:
 	audio_stream_player.play(sound_start_position)
 	# We make sure the sound stops when the text finishes displaying
 	tween.finished.connect(audio_stream_player.stop)
-
-	# We animate the character sliding in.
 	slide_in()
-
-	# Finally, we disable the next button until the text finishes displaying.
-	next_button.disabled = true
-	tween.finished.connect(func() -> void:
-		next_button.disabled = false
-	)
 
 
 ## Progresses to the next slide.
