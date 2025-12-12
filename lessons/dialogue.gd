@@ -6,7 +6,8 @@ extends Control
 ## - text: a [code]String[/code] containing the text the character says
 ## - character: a [code]Texture[/code] representing the character, that we extract from the [code]bodies[/code] dictionary
 ## - choices: a [code]dictionary[/code] with [code]String[/code] keys and [code]int[/code] values
-@export var dialogue_items: Array[DialogueItem] = []
+@export var dialogue_items: Array[DialogueItem] = []:
+	set = set_dialogue_items
 
 ## UI element that shows the texts
 @onready var rich_text_label: RichTextLabel = %RichTextLabel
@@ -21,6 +22,8 @@ extends Control
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	show_text(0)
 
 ## Draws the selected text
@@ -92,3 +95,16 @@ func slide_in() -> void:
 	slide_tween.tween_property(body, "position:x", 0, 0.3)
 	body.modulate.a = 0
 	slide_tween.parallel().tween_property(body, "modulate:a", 1, 0.2)
+
+
+func set_dialogue_items(new_dialogue_items: Array[DialogueItem]) -> void:
+	for index in new_dialogue_items.size():
+		if new_dialogue_items[index] == null:
+			new_dialogue_items[index] = DialogueItem.new()
+	dialogue_items = new_dialogue_items
+	
+func get_configuration_warnings() -> PackedStringArray:
+	if dialogue_items.is_empty():
+		return ["u need at least 1 dialogue item 4 the dialogue system 2 work"]
+	return[]
+	
